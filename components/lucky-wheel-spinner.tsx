@@ -5,21 +5,21 @@ import { Sparkles } from 'lucide-react'
 import Confetti from '@/components/confetti'
 
 const LUCKY_WISHES = [
-  '✨ Cô/Thầy là ngọn đèn sáng trên con đường học tập của chúng em',
+  '✨ Cô/Thầy là ngọn đèn hải đăng soi sáng con đường học tập của chúng em',
   '🌟 Cảm ơn cô/thầy vì tâm huyết và yêu thương dành cho học sinh',
   '💝 Chúc cô/thầy luôn mạnh khỏe và hạnh phúc bên gia đình',
   '🎓 Cô/Thầy là công nhân tâm huyết của tương lai đất nước',
   '🌸 Hãy cứ bớt lo lắng, chúng em sẽ cố gắng hết sức',
   '💪 Cô/Thầy là người hùng trong tim mỗi học sinh',
-  '✨ Cảm ơn vì mỗi ngày bạn dạy chúng em là một bài học xương máu',
+  '✨ Cảm ơn vì mỗi ngày dạy chúng em một bài học quý giá',
   '🎯 Chúc cô/thầy sức khỏe dồi dào trong năm học mới',
   '❤️ Yêu cô/thầy vì tất cả những điều tuyệt vời cô/thầy đã làm',
-  '🌈 Cô/Thầy là niên một khó quên trong trái tim chúng em',
+  '🌈 Cô/Thầy là những người khó quên trong trái tim chúng em',
   '📚 Cảm ơn cô/thầy vì đã giúp chúng em trưởng thành',
   '✨ Cô/Thầy xứng đáng được yêu quý nhất',
   '🎊 Chúc cô/thầy mỗi ngày đều tràn đầy niềm vui',
   '💫 Cô/Thầy là ngôi sao hướng dẫn con đường của chúng em',
-  '🙏 Tạ ơn vì sự hy sinh và tình yêu thương thương hiền của cô/thầy',
+  '🙏 Tạ ơn vì sự hy sinh và tình yêu thương của cô/thầy',
 ]
 
 export default function LuckyWheelSpinner() {
@@ -29,7 +29,6 @@ export default function LuckyWheelSpinner() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const confettiRef = useRef<{ trigger: () => void } | null>(null)
 
-  // Create audio context for spinning sound
   useEffect(() => {
     if (audioRef.current === null) {
       audioRef.current = new Audio('data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==')
@@ -37,7 +36,6 @@ export default function LuckyWheelSpinner() {
   }, [])
 
   const playTingSound = () => {
-    // Create a simple beep sound using Web Audio API
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
@@ -61,14 +59,11 @@ export default function LuckyWheelSpinner() {
     setIsSpinning(true)
     setSelectedWish(null)
 
-    // Random rotation: between 1800 to 3600 degrees (5-10 full rotations)
     const randomWishIndex = Math.floor(Math.random() * LUCKY_WISHES.length)
-    const degreesPerWish = 360 / LUCKY_WISHES.length
     const targetRotation = Math.random() * 360 + 360 * 8
 
-    // Animate the spin
     const startTime = Date.now()
-    const duration = 2000 // 2 seconds
+    const duration = 2000
 
     playTingSound()
 
@@ -76,7 +71,6 @@ export default function LuckyWheelSpinner() {
       const elapsed = Date.now() - startTime
       const progress = Math.min(elapsed / duration, 1)
 
-      // Easing function for smooth deceleration
       const easeOut = 1 - Math.pow(1 - progress, 3)
       const currentRotation = targetRotation * easeOut
 
@@ -105,84 +99,168 @@ export default function LuckyWheelSpinner() {
         </p>
       </div>
 
-      {/* Spinning Wheel Container */}
-      <div className="relative w-full max-w-sm aspect-square">
-        {/* Spinning Wheel */}
-        <div
-          className="absolute inset-0 transition-transform"
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            transitionDuration: isSpinning ? '0ms' : '0ms',
-          }}
-        >
-          <svg
-            viewBox="0 0 400 400"
-            className="w-full h-full"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Outer circle */}
-            <circle cx="200" cy="200" r="190" fill="none" stroke="#fff" strokeWidth="8" />
-
-            {/* Wheel segments */}
-            {LUCKY_WISHES.map((_, index) => {
-              const angle = (360 / LUCKY_WISHES.length) * index
-              const colors = [
-                '#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181',
-                '#AA96DA', '#FCBAD3', '#A8D8EA', '#AA96DA', '#FFD3B6',
-                '#FFAAA5', '#FF8B94', '#A8E6CF', '#FFD3B6', '#FFAAA5'
-              ]
-              const color = colors[index % colors.length]
-
-              return (
-                <g key={index}>
-                  {/* Segment */}
-                  <path
-                    d={`M 200,200 L ${200 + 180 * Math.cos((angle - 90) * Math.PI / 180)},${200 + 180 * Math.sin((angle - 90) * Math.PI / 180)} A 180,180 0 0,1 ${200 + 180 * Math.cos((angle + 360 / LUCKY_WISHES.length - 90) * Math.PI / 180)},${200 + 180 * Math.sin((angle + 360 / LUCKY_WISHES.length - 90) * Math.PI / 180)} Z`}
-                    fill={color}
-                    stroke="#fff"
-                    strokeWidth="2"
-                  />
-                </g>
-              )
-            })}
-
-            {/* Center circle */}
-            <circle cx="200" cy="200" r="40" fill="#fff" stroke="#FFE66D" strokeWidth="4" />
-            <circle cx="200" cy="200" r="30" fill="#FFE66D" />
-          </svg>
-        </div>
-
-        {/* Pointer at top */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
-          <div className="w-0 h-0 border-l-8 border-r-8 border-t-12 border-l-transparent border-r-transparent border-t-white drop-shadow-lg" />
-        </div>
-      </div>
-
-      {/* Spin Button */}
-      <button
-        onClick={handleSpin}
-        disabled={isSpinning}
-        className="px-8 py-4 bg-gradient-to-r from-vibrant-orange to-coral text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-      >
-        <Sparkles className="w-5 h-5" />
-        {isSpinning ? 'Đang quay...' : 'Quay Lời Chúc'}
-      </button>
-
-      {/* Wish Display */}
-      {selectedWish && (
-        <div className="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 text-center transform animate-in fade-in zoom-in">
-          <div className="text-5xl mb-4">✨</div>
-          <p className="text-xl md:text-2xl font-semibold text-coral leading-relaxed">
-            {selectedWish}
-          </p>
-          <div className="mt-6 flex justify-center gap-2">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="text-2xl animate-bounce" style={{ animationDelay: `${i * 0.2}s` }}>
-                ✨
+      {!selectedWish ? (
+        <>
+          <div className="relative w-full max-w-sm aspect-square">
+            {/* Floating decorative elements */}
+            <div className="absolute inset-0 pointer-events-none">
+              {/* Top left - floating book */}
+              <div className="absolute top-2 left-2 text-4xl animate-bounce" style={{ animationDuration: '2.5s' }}>
+                📚
               </div>
-            ))}
+              {/* Top right - floating apple */}
+              <div className="absolute top-2 right-2 text-4xl animate-bounce" style={{ animationDelay: '0.3s', animationDuration: '2.5s' }}>
+                🍎
+              </div>
+              {/* Bottom left - floating pencil */}
+              <div className="absolute bottom-2 left-2 text-4xl animate-bounce" style={{ animationDelay: '0.6s', animationDuration: '2.5s' }}>
+                ✏️
+              </div>
+              {/* Bottom right - floating graduation cap */}
+              <div className="absolute bottom-2 right-2 text-4xl animate-bounce" style={{ animationDelay: '0.9s', animationDuration: '2.5s' }}>
+                🎓
+              </div>
+              {/* Left center - floating star */}
+              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 text-3xl animate-spin" style={{ animationDuration: '4s' }}>
+                ⭐
+              </div>
+              {/* Right center - floating heart */}
+              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-3xl animate-pulse">
+                ❤️
+              </div>
+            </div>
+
+            {/* Spinning Wheel Container */}
+            <div className="absolute inset-0 animate-in fade-in duration-500">
+              <div
+                className="w-full h-full"
+                style={{
+                  transform: `rotate(${rotation}deg)`,
+                  transitionDuration: isSpinning ? '0ms' : '0ms',
+                }}
+              >
+                <svg
+                  viewBox="0 0 400 400"
+                  className="w-full h-full"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Outer circle */}
+                  <circle cx="200" cy="200" r="190" fill="none" stroke="#fff" strokeWidth="8" />
+
+                  {/* Wheel segments */}
+                  {LUCKY_WISHES.map((_, index) => {
+                    const angle = (360 / LUCKY_WISHES.length) * index
+                    const colors = [
+                      '#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181',
+                      '#AA96DA', '#FCBAD3', '#A8D8EA', '#AA96DA', '#FFD3B6',
+                      '#FFAAA5', '#FF8B94', '#A8E6CF', '#FFD3B6', '#FFAAA5'
+                    ]
+                    const color = colors[index % colors.length]
+
+                    return (
+                      <g key={index}>
+                        <path
+                          d={`M 200,200 L ${200 + 180 * Math.cos((angle - 90) * Math.PI / 180)},${200 + 180 * Math.sin((angle - 90) * Math.PI / 180)} A 180,180 0 0,1 ${200 + 180 * Math.cos((angle + 360 / LUCKY_WISHES.length - 90) * Math.PI / 180)},${200 + 180 * Math.sin((angle + 360 / LUCKY_WISHES.length - 90) * Math.PI / 180)} Z`}
+                          fill={color}
+                          stroke="#fff"
+                          strokeWidth="2"
+                        />
+                      </g>
+                    )
+                  })}
+
+                  {/* Center circle */}
+                  <circle cx="200" cy="200" r="40" fill="#fff" stroke="#FFE66D" strokeWidth="4" />
+                  <circle cx="200" cy="200" r="30" fill="#FFE66D" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Pointer at top */}
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-20">
+              <div className="w-0 h-0 border-l-8 border-r-8 border-t-12 border-l-transparent border-r-transparent border-t-white drop-shadow-lg" />
+            </div>
           </div>
-        </div>
+
+          {/* Spin Button */}
+          <button
+            onClick={handleSpin}
+            disabled={isSpinning}
+            className="px-8 py-4 bg-gradient-to-r from-vibrant-orange to-coral text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <Sparkles className="w-5 h-5" />
+            {isSpinning ? 'Đang quay...' : 'Quay Lời Chúc'}
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="w-full max-w-md bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl shadow-2xl p-12 text-center transform animate-in fade-in zoom-in duration-500 relative overflow-hidden">
+            {/* Animated background - education elements floating around */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
+              {/* Floating books */}
+              <div className="absolute top-4 left-4 text-5xl animate-bounce" style={{ animationDuration: '2s' }}>
+                📚
+              </div>
+              <div className="absolute bottom-6 right-6 text-4xl animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '2s' }}>
+                📖
+              </div>
+              {/* Floating stars */}
+              <div className="absolute top-1/2 right-4 text-3xl animate-spin" style={{ animationDuration: '3s' }}>
+                ⭐
+              </div>
+              {/* Floating apples */}
+              <div className="absolute top-12 right-12 text-3xl animate-bounce" style={{ animationDelay: '0.3s', animationDuration: '2.5s' }}>
+                🍎
+              </div>
+              {/* Floating pencils */}
+              <div className="absolute bottom-12 left-8 text-3xl animate-bounce" style={{ animationDelay: '0.6s', animationDuration: '2.5s' }}>
+                ✏️
+              </div>
+              {/* Floating graduation caps */}
+              <div className="absolute bottom-4 right-1/3 text-3xl animate-spin" style={{ animationDelay: '0.5s', animationDuration: '4s' }}>
+                🎓
+              </div>
+            </div>
+
+            {/* Wish content */}
+            <div className="relative z-10">
+              {/* Animated book/diploma icon */}
+              <div className="text-6xl mb-6 animate-bounce">
+                📚
+              </div>
+
+              <p className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 leading-relaxed mb-6">
+                {selectedWish}
+              </p>
+
+              {/* Sparkles animation */}
+              <div className="flex justify-center gap-3 mb-8">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="text-3xl animate-bounce" style={{ animationDelay: `${i * 0.15}s` }}>
+                    ✨
+                  </div>
+                ))}
+              </div>
+
+              {/* Learning-themed decorative elements */}
+              <div className="flex justify-center gap-4 text-3xl">
+                <span className="animate-spin" style={{ animationDuration: '3s' }}>🎓</span>
+                <span className="animate-bounce">📖</span>
+                <span className="animate-spin" style={{ animationDuration: '3s' }}>🎓</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Button to spin again */}
+          <button
+            onClick={handleSpin}
+            disabled={isSpinning}
+            className="px-8 py-4 bg-gradient-to-r from-vibrant-orange to-coral text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mt-4"
+          >
+            <Sparkles className="w-5 h-5" />
+            Quay Lần Khác
+          </button>
+        </>
       )}
 
       {/* Confetti Component */}

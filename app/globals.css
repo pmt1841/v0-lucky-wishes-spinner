@@ -132,4 +132,23 @@
   .from-vibrant-orange {
     @apply from-[#ff8c42];
   }
+
+  /* Added custom animation for floating school elements */
+  @keyframes float-gentle {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .animate-float {
+    animation: float-gentle 3s ease-in-out infinite;
+  }
+
+  @keyframes orbit {
+    0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+  }
+
+  .animate-orbit {
+    animation: orbit 8s linear infinite;
+  }
 }
